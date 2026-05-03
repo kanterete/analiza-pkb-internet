@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Analityczny: Internet a PKB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div id="loaderOverlay" class="hidden">
+    <div class="spinner"></div>
+    <p id="loaderText">Ładowanie...</p>
+</div>
+
+<div class="container">
+    <header class="main-header">
+        <h2>Dostęp do internetu a PKB</h2>
+        <p class="subtitle">Zintegrowany panel danych demograficzno-gospodarczych</p>
+    </header>
+
+    <!-- Panel Logowania -->
+    <div id="loginSection" class="card login-card">
+        <h3>Logowanie do systemu</h3>
+        <p class="hint">Wprowadź dane administratora, aby uzyskać dostęp do API.</p>
+        <input type="text" id="username" placeholder="Login" value="admin">
+        <input type="password" id="password" placeholder="Hasło" value="admin">
+        <button class="btn btn-primary" onclick="login()">Zaloguj się</button>
+        <div id="errorBox" class="hidden" style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-top: 15px; font-weight: bold;"></div>
+    </div>
+
+    <!-- Panel Danych -->
+    <div id="dataSection" class="hidden">
+
+        <!-- Panel sterowania -->
+        <div class="card action-panel">
+            <button class="btn btn-warning" onclick="integrateData()">Pobierz dane z API Banku Światowego</button>
+            <button class="btn btn-success" onclick="fetchData()">Generuj analizę graficzną</button>
+            <button class="btn btn-danger" onclick="logout()">Wyloguj</button>
+        </div>
+
+        <!-- Wykres -->
+        <div id="chartContainer" class="card">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <!-- Tabela -->
+        <div id="tableContainer" class="card hidden">
+            <div class="table-header">
+                <h3>Szczegółowe dane z bazy</h3>
+                <p class="hint">Kliknij w nagłówek wybranej kolumny, aby posortować dane.</p>
+            </div>
+            <div class="table-responsive">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable('country_name')">Kraj ↕</th>
+                            <th onclick="sortTable('year')">Rok ↕</th>
+                            <th onclick="sortTable('broadband_subs')">Internet (na 100 os.) ↕</th>
+                            <th onclick="sortTable('population')">Populacja ↕</th>
+                            <th onclick="sortTable('gdp')">PKB (USD) ↕</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dane z JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

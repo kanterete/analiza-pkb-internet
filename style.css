@@ -1,0 +1,165 @@
+/* Główne style i tło */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    padding: 30px 20px;
+    margin: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Nagłówki */
+.main-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.main-header h2 {
+    margin: 0;
+    color: #1a1a1a;
+    font-size: 28px;
+}
+.subtitle {
+    color: #666;
+    margin-top: 5px;
+}
+.hint {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+/* Karty */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+.login-card {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Formularze i Przyciski */
+input {
+    padding: 12px;
+    margin: 8px 0 15px 0;
+    border-radius: 8px;
+    border: 1px solid #dcdde1;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.3s;
+}
+input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.btn {
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+}
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Przyciski akcji */
+.action-panel {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.action-panel .btn {
+    width: auto;
+    flex: 1;
+    min-width: 200px;
+}
+
+.btn-primary { background-color: #007bff; }
+.btn-primary:hover { background-color: #0069d9; }
+.btn-warning { background-color: #ffc107; color: #212529; }
+.btn-warning:hover { background-color: #e0a800; }
+.btn-success { background-color: #28a745; }
+.btn-success:hover { background-color: #218838; }
+.btn-danger { background-color: #dc3545; }
+.btn-danger:hover { background-color: #c82333; }
+
+.hidden { display: none !important; }
+.error-text { color: #dc3545; font-weight: 600; font-size: 14px; margin-top: 10px; }
+
+/* Tabela */
+.table-responsive {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
+}
+th, td {
+    border-bottom: 1px solid #eaebf0;
+    padding: 12px 15px;
+    text-align: right;
+}
+th {
+    background-color: #f8f9fa;
+    color: #495057;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 700;
+    transition: background-color 0.2s;
+}
+th:hover { background-color: #e2e6ea; }
+td:first-child { text-align: left; font-weight: 600; color: #2c3e50; }
+tr:hover td { background-color: #f8f9fa; }
+
+#loaderOverlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+#loaderText {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
