@@ -18,10 +18,12 @@ Wymagania systemowe: Zainstalowany i uruchomiony Docker / Docker Desktop.
 Kroki:
 1. Otwórz terminal w folderze z projektem.
 2. Zbuduj obraz aplikacji poleceniem:
+
    ``` 
    docker build -t projekt-integracja .
    ```
 3. Uruchom kontener poleceniem:
+
    ```
    docker run -d -p 8000:8000 --name projekt-app projekt-integracja
    ```
@@ -36,6 +38,7 @@ Wymagania: Python 3.11+
 
 ### Kroki w terminalu IDE:
 1. Utwórz środowisko wirtualne:
+
    ```
    python -m venv venv
    ```
@@ -43,10 +46,12 @@ Wymagania: Python 3.11+
    - Windows: venv\Scripts\activate
    - Linux/Mac: source venv/bin/activate
 3. Zainstaluj wymagane pakiety:
+
    ```
    pip install -r requirements.txt
    ```
 4. Uruchom serwer developerski:
+
    ```
    uvicorn main:app --host 0.0.0.0 --port 8000 --reload
    ```

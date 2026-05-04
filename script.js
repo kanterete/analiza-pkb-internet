@@ -1,4 +1,5 @@
 let jwtToken = "";
+let trendChart = null;
 let myChart = null;
 let globalData = [];
 let sortDirection = 1;
@@ -80,6 +81,7 @@ async function fetchData() {
             }
 
             drawChart(globalData);
+            drawTrendChart(globalData);
             drawTable(globalData);
             document.getElementById("tableContainer").classList.remove("hidden");
         } else {
@@ -110,7 +112,14 @@ function drawChart(dataArray) {
 
     const data2019 = dataArray.filter(row => row.year === 2019 && row.gdp && row.broadband_subs);
     const labels = data2019.map(row => row.country_name);
-    const internetData = data2019.map(row => row.broadband_subs);
+
+    const internetData = data2019.map(row => {
+        if (row.broadband_subs && row.population) {
+            return ((row.broadband_subs / row.population) * 100).toFixed(2);
+        }
+        return 0;
+    });
+
     const gdpData = data2019.map(row => row.gdp);
 
     const ctx = document.getElementById('myChart').getContext('2d');
@@ -145,13 +154,72 @@ function drawChart(dataArray) {
                 x: { ticks: { font: { family: 'Inter' } } },
                 y: {
                     type: 'linear', display: true, position: 'left',
-                    title: { display: true, text: 'Ilość łączy', font: { family: 'Inter', weight: 'bold' } },
+                    title: { display: true, text: 'Ilość łączy (na 100 os.)', font: { family: 'Inter', weight: 'bold' } },
                     ticks: { font: { family: 'Inter' } }
                 },
                 y1: {
                     type: 'linear', display: true, position: 'right',
                     title: { display: true, text: 'PKB w USD', font: { family: 'Inter', weight: 'bold' } },
                     grid: { drawOnChartArea: false },
+                    ticks: { font: { family: 'Inter' } }
+                }
+            }
+        }
+    });
+}
+
+function drawTrendChart(dataArray) {
+    if (trendChart) trendChart.destroy();
+
+    // 1. Wyciągamy unikalne lata i sortujemy rosnąco
+    const years = [...new Set(dataArray.map(item => item.year))].filter(y => y !== null).sort((a, b) => a - b);
+
+    // 2. Wyciągamy unikalne państwa
+    const countries = [...new Set(dataArray.map(item => item.country_name))];
+
+    // Kolory linii na wykresie
+    const colors = ['#36a2eb', '#ff6384', '#4bc0c0', '#ff9f40', '#9966ff'];
+
+    // 3. Budujemy serie danych dla każdego państwa
+    const datasets = countries.map((country, index) => {
+        const dataPoints = years.map(year => {
+            // Szukamy rekordu dla konkretnego państwa i roku
+            const record = dataArray.find(r => r.country_name === country && r.year === year);
+            if (record && record.broadband_subs && record.population) {
+                // Przeliczamy na 100 osób
+                return ((record.broadband_subs / record.population) * 100).toFixed(2);
+            }
+            return null;
+        });
+
+        return {
+            label: country,
+            data: dataPoints,
+            borderColor: colors[index % colors.length],
+            backgroundColor: colors[index % colors.length],
+            tension: 0.3, // Lekkie zaokrąglenie linii
+            borderWidth: 3,
+            fill: false
+        };
+    });
+
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    trendChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: years,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { position: 'top', labels: { font: { family: 'Inter', size: 13 } } }
+            },
+            scales: {
+                x: { ticks: { font: { family: 'Inter' } } },
+                y: {
+                    title: { display: true, text: 'Ilość łączy (na 100 os.)', font: { family: 'Inter', weight: 'bold' } },
                     ticks: { font: { family: 'Inter' } }
                 }
             }
@@ -167,7 +235,13 @@ function drawTable(dataArray) {
         const tr = document.createElement("tr");
         const popFormatted = row.population ? row.population.toLocaleString('pl-PL') : "Brak";
         const gdpFormatted = row.gdp ? "$ " + row.gdp.toLocaleString('pl-PL') : "Brak";
-        const netFormatted = row.broadband_subs ? row.broadband_subs.toFixed(2) : "Brak";
+
+        let netFormatted = "Brak";
+        if (row.broadband_subs && row.population) {
+            netFormatted = ((row.broadband_subs / row.population) * 100).toFixed(2);
+        } else if (row.broadband_subs) {
+            netFormatted = row.broadband_subs.toFixed(2);
+        }
 
         tr.innerHTML = `
             <td>${row.country_name} (${row.country_code})</td>
@@ -190,4 +264,5 @@ function logout() {
     document.getElementById("tableContainer").classList.add("hidden");
     showError("");
     if (myChart) myChart.destroy();
+    if (trendChart) trendChart.destroy();
 }
