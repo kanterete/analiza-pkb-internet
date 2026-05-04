@@ -266,3 +266,39 @@ function logout() {
     if (myChart) myChart.destroy();
     if (trendChart) trendChart.destroy();
 }
+
+// Funkcja eksportująca pobrane dane do pliku XML
+function exportToXML() {
+    if (!globalData || globalData.length === 0) {
+        alert("Brak danych do eksportu! Najpierw wygeneruj analizę (Krok 2).");
+        return;
+    }
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<dataset>\n';
+
+    globalData.forEach(row => {
+        xml += '  <record>\n';
+        xml += `    <country_name>${row.country_name || ''}</country_name>\n`;
+        xml += `    <country_code>${row.country_code || ''}</country_code>\n`;
+        xml += `    <year>${row.year || ''}</year>\n`;
+        xml += `    <broadband_subs>${row.broadband_subs !== null ? row.broadband_subs : ''}</broadband_subs>\n`;
+        xml += `    <population>${row.population !== null ? row.population : ''}</population>\n`;
+        xml += `    <gdp>${row.gdp !== null ? row.gdp : ''}</gdp>\n`;
+        xml += '  </record>\n';
+    });
+
+    xml += '</dataset>';
+
+    const blob = new Blob([xml], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'dane_analityczne.xml';
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
